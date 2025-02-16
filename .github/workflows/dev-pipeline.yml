@@ -49,14 +49,10 @@ jobs:
         with:
           version: "v1.26.0"
 
-      - name: Configure Kubernetes Context
+      - name: Set up Kubernetes and Helm providers
         run: |
-          echo "${{ secrets.KUBECONFIG }}" > $KUBECONFIG_PATH
-          export KUBECONFIG=$KUBECONFIG_PATH
-  
-      - name: Test kubectl connectivity
-        run: |
-          kubectl get nodes
+          echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
+          echo "KUBECONFIG=kubeconfig.yaml" >> $GITHUB_ENV
   
       - name: Deploy Application using Helm
         run: |
