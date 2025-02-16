@@ -53,7 +53,11 @@ jobs:
         run: |
           echo "${{ secrets.KUBECONFIG }}" > $KUBECONFIG_PATH
           export KUBECONFIG=$KUBECONFIG_PATH
-
+  
+      - name: Test kubectl connectivity
+        run: |
+          kubectl get nodes
+  
       - name: Deploy Application using Helm
         run: |
           helm repo add microservices $HELM_REPO_URL
