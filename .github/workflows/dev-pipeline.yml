@@ -1,0 +1,66 @@
+name: Crewmeister Project CI/CD Stage
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  IMAGE_NAME: "hesamrad/crew"
+  NAMESPACE: "develop"
+  HELM_REPO_URL: "https://hesam-rad.github.io/infra-devops/"
+  HELM_CHART_NAME: "helm-chart-crew"
+  VALUES_FILE: "./charts/develop-values.yml"
+  TIMEOUT: "250s"
+
+jobs:
+
+  build:
+    name: Build Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: CheckOut Code
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+              
+      - name: Build & Push Docker Image
+        run: | 
+          docker build -f Dockerfile-stage --no-cache -t $IMAGE_NAME:$GITHUB_SHA .
+          docker push $IMAGE_NAME:$GITHUB_SHA
+
+
+  deploy:
+    name: Deploy to Kubernetes
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      KUBECONFIG_PATH: "kubeconfig.yaml"
+    steps:
+      - name: Check Out Code
+        uses: actions/checkout@v3
+
+      - name: Set up Kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: "v1.26.0"
+
+      - name: Configure Kubernetes Context
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" > $KUBECONFIG_PATH
+          export KUBECONFIG=$KUBECONFIG_PATH
+
+      - name: Deploy Application using Helm
+        run: |
+          helm repo add microservices $HELM_REPO_URL
+          helm repo update
+          helm upgrade --install crewmeister-app microservices/$HELM_CHART_NAME \
+            --namespace $NAMESPACE \
+            --create-namespace \
+            --values $VALUES_FILE \
+            --set image.tag=$GITHUB_SHA \
+            --atomic \
+            --timeout $TIMEOUT
