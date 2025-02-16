@@ -5,6 +5,7 @@ on:
     branches: [ main ]
 
 env:
+  DOCKERFILE: "Dockerfile"
   IMAGE_NAME: "hesamrad/crew"
   NAMESPACE: "develop"
   HELM_REPO_URL: "https://hesam-rad.github.io/infra-devops/"
@@ -29,7 +30,7 @@ jobs:
               
       - name: Build & Push Docker Image
         run: | 
-          docker build -f Dockerfile-stage --no-cache -t $IMAGE_NAME:$GITHUB_SHA .
+          docker build -f $DOCKERFILE --no-cache -t $IMAGE_NAME:$GITHUB_SHA .
           docker push $IMAGE_NAME:$GITHUB_SHA
 
 
