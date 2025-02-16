@@ -1,5 +1,5 @@
 ## Dependency
-FROM hesamrad/crew:jdk17-alp3.21.2-mvn4 AS dependency_maven
+FROM hesamrad/crew:jdk17-alp3.21.2-mvn3.8.4 AS dependency_maven
 LABEL MAINTAINER="hesam@crewmeister.com"
 COPY pom.xml ./
 COPY .mvn ./.mvn
