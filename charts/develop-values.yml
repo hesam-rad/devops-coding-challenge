@@ -57,24 +57,24 @@ resources:
     memory: 128Mi
 
 
-livenessProbe: 
-  httpGet:
-    path: /actuator/health
-    port: 8080
-  initialDelaySeconds: 60
-  periodSeconds: 10
-  # timeoutSeconds: 5
-  # failureThreshold: 3
-  # successThreshold: 1
+livenessProbe: {}
+  # httpGet:
+  #   path: /actuator/health
+  #   port: 8080
+  # initialDelaySeconds: 60
+  # periodSeconds: 10
+  # # timeoutSeconds: 5
+  # # failureThreshold: 3
+  # # successThreshold: 1
 
-readinessProbe: 
-  httpGet:
-    path: /actuator/health
-    port: 8080
-  initialDelaySeconds: 60
-  periodSeconds: 10
-  # failureThreshold: 3
-  # timeoutSeconds: 5
+readinessProbe: {}
+  # httpGet:
+  #   path: /actuator/health
+  #   port: 8080
+  # initialDelaySeconds: 60
+  # periodSeconds: 10
+  # # failureThreshold: 3
+  # # timeoutSeconds: 5
 
 # startupProbe: {}
   # httpGet:
