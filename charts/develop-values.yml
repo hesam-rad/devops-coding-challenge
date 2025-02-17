@@ -99,6 +99,11 @@ envFrom:
   - secretRef:
       name: crew-app-secret
 
+config:
+  SPRING_APPLICATION_NAME: 'app'
+  ACTUATOR_ENDPOINTS: 'health,info,prometheus'
+  SPRING_DATASOURCE_HOST: 'mysql.database.svc'
+
 prometheus:
   enabled: true
   metric_path: /actuator/prometheus
